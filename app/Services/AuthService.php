@@ -20,7 +20,8 @@ class AuthService
             return errorResponse('Akun Anda nonaktif. Hubungi administrator.', null, 403);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token', ['*'], now()->addHours(12))->plainTextToken;
+
 
         return successResponse([
             'user' => $user,
