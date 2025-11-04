@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->ulid('id')->primary();
             $table->string('code', 5)->unique();
             $table->string('name', 50);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

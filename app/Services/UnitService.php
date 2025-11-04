@@ -9,7 +9,10 @@ class UnitService
 {
     public function getTree()
     {
-        return Units::with('children')->whereNull('parent_id')->get();
+        return Units::with('children.children')
+            ->whereNull('parent_id')
+            ->orderBy('name')
+            ->get();
     }
 
     public function create(array $data)
@@ -26,6 +29,10 @@ class UnitService
 
     public function delete(Units $unit)
     {
+        if ($unit->children()->exists()) {
+            throw new \Exception('Unit ini masih memiliki sub-unit dan tidak dapat dihapus.');
+        }
+
         $unit->delete();
     }
 }

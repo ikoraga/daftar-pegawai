@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
@@ -27,31 +27,32 @@ class Employees extends Model
         'unit_id',
         'photo_path',
     ];
+    protected $hidden = [
+        'updated_at',
+        'deleted_at',
+        'created_at'
+    ];
 
     public function position(): BelongsTo
     {
-        return $this->belongsTo(Position::class, 'position_id', 'id');
+        return $this->belongsTo(Positions::class, 'position_id', 'id');
     }
 
     public function religion(): BelongsTo
     {
-        return $this->belongsTo(Religions::class);
+        return $this->belongsTo(Religions::class, 'religion_id', 'id');
     }
 
     public function rank(): BelongsTo
     {
-        return $this->belongsTo(Ranks::class);
+        return $this->belongsTo(Ranks::class, 'rank_id', 'id');
     }
     public function echelon(): BelongsTo
     {
-        return $this->belongsTo(Echelons::class);
+        return $this->belongsTo(Echelons::class, 'echelon_id', 'id');
     }
     public function unit(): BelongsTo
     {
-        return $this->belongsTo(Units::class);
-    }
-    public function photo(): BelongsTo
-    {
-        return $this->belongsTo(Employee_photos::class);
+        return $this->belongsTo(Units::class, 'unit_id', 'id');
     }
 }
