@@ -15,7 +15,7 @@ class PrintService
             $query->where('unit_id', $unit_id);
 
         $employees = $query->get();
-        $pdf = PDF::loadView('print.employees', compact('employees'))->setPaper('A4', 'portrait');
+        $pdf = PDF::loadView('print.employees', compact('employees'))->setPaper('A4', 'landscape');
         return $pdf->download('daftar_pegawai.pdf');
     }
 }

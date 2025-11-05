@@ -17,7 +17,11 @@ class UnitController extends Controller
 
     public function index()
     {
-        return response()->json($this->svc->getTree());
+        return successResponse($this->svc->getTree());
+    }
+    public function show(Units $unit)
+    {
+        return successResponse($this->svc->show($unit));
     }
 
     public function store(Request $req)
@@ -27,7 +31,7 @@ class UnitController extends Controller
             'kode' => 'nullable|string|max:10|unique:units,kode',
             'parent_id' => 'nullable|string|size:26|exists:units,id',
         ]);
-        return response()->json($this->svc->create($req->all()), 201);
+        return successResponse($this->svc->create($req->all()));
     }
 
     public function update(Request $req, Units $unit)
@@ -37,12 +41,13 @@ class UnitController extends Controller
             'kode' => 'nullable|string|max:10|unique:units,kode,' . $unit->id,
             'parent_id' => 'nullable|string|size:26|exists:units,id',
         ]);
-        return response()->json($this->svc->update($unit, $req->all()));
+        return successResponse($this->svc->update($unit, $req->all()));
     }
 
     public function destroy(Units $unit)
     {
         $this->svc->delete($unit);
-        return response()->json(['message' => 'Unit berhasil dihapus']);
+
+        return successResponse(null, 'Unit berhasil dihapus');
     }
 }

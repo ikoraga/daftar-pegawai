@@ -15,6 +15,11 @@ class UnitService
             ->get();
     }
 
+    public function show(Units $unit)
+    {
+        return $unit->load('parent', 'children.children');
+
+    }
     public function create(array $data)
     {
         $data['id'] = (string) Str::ulid();

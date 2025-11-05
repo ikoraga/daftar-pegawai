@@ -20,6 +20,7 @@ class Employees extends Model
         'phone',
         'npwp',
         'gender',
+        'duty_place',
         'religion_id',
         'rank_id',
         'echelon_id',

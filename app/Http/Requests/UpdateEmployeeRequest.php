@@ -14,41 +14,45 @@ class UpdateEmployeeRequest extends FormRequest
 
     public function rules(): array
     {
-        $employeeId = $this->route('employee')?->id ?? $this->route('Employees')?->id;
+        // Ambil ID dari route (mendukung {employees} atau model)
+        $employee = $this->route('employees') ?? $this->route('employee');
+        $employeeId = is_object($employee) ? $employee->id : $employee;
 
         return [
-            'name' => 'required|max:120',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('employees', 'email')->ignore($employeeId),
+            'name' => 'sometimes|required|string|max:120',
+            'nip' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:20',
+                Rule::unique('employees', 'nip')->ignore($employeeId, 'id'),
             ],
-            'phone' => 'required',
-            'unit_id' => 'required',
-            'rank_id' => 'required',
-            'position_id' => 'required',
-            'echelon_id' => 'required',
-            'religion_id' => 'required',
-            'photo' => 'nullable|image|max:1048',
+            'phone' => 'sometimes|nullable|string|max:20',
+            'unit_id' => 'sometimes|nullable|string|size:26|exists:units,id',
+            'rank_id' => 'sometimes|nullable|string|size:26|exists:ranks,id',
+            'position_id' => 'sometimes|nullable|string|size:26|exists:positions,id',
+            'echelon_id' => 'sometimes|nullable|string|size:26|exists:echelons,id',
+            'religion_id' => 'sometimes|nullable|string|size:26|exists:religions,id',
+            'photo' => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Name tidak boleh kosong',
-            'name.max' => 'Name maksimal 120 karakter',
-            'email.required' => 'Email tidak boleh kosong',
-            'email.email' => 'Email tidak valid',
-            'email.unique' => 'Email sudah digunakan oleh pegawai lain',
-            'phone.required' => 'Phone tidak boleh kosong',
-            'unit_id.required' => 'Unit tidak boleh kosong',
-            'rank_id.required' => 'Rank tidak boleh kosong',
-            'position_id.required' => 'Position tidak boleh kosong',
-            'echelon_id.required' => 'Echelon tidak boleh kosong',
-            'religion_id.required' => 'Religion tidak boleh kosong',
-            'photo.image' => 'Photo harus berupa gambar',
-            'photo.max' => 'Photo maksimal 1MB',
+            'name.required' => 'Nama tidak boleh kosong.',
+            'name.max' => 'Nama maksimal 120 karakter.',
+            'nip.unique' => 'NIP sudah digunakan oleh pegawai lain.',
+            'nip.max' => 'NIP maksimal 20 karakter.',
+            'phone.max' => 'Nomor telepon maksimal 20 karakter.',
+            'unit_id.exists' => 'Unit kerja tidak ditemukan.',
+            'rank_id.exists' => 'Pangkat tidak ditemukan.',
+            'position_id.exists' => 'Jabatan tidak ditemukan.',
+            'echelon_id.exists' => 'Eselon tidak ditemukan.',
+            'religion_id.exists' => 'Agama tidak ditemukan.',
+            'photo.image' => 'Foto harus berupa gambar.',
+            'photo.mimes' => 'Foto hanya boleh bertipe JPG, JPEG, atau PNG.',
+            'photo.max' => 'Foto maksimal 2MB.',
         ];
     }
 }

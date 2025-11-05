@@ -6,6 +6,7 @@ use App\Models\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Units;
 use Illuminate\Http\UploadedFile;
 class EmployeesService
 {
@@ -15,10 +16,25 @@ class EmployeesService
             ->when($req->search, fn($q) => $q
                 ->where('full_name', 'like', "%{$req->search}%")
                 ->orWhere('nip', 'like', "%{$req->search}%"))
-            ->when($req->unit_id, fn($q) => $q->where('unit_id', $req->unit_id))
+            ->when($req->unit_id, function ($q) use ($req) {
+                $unitIds = $this->getAllUnitIds($req->unit_id);
+                $q->whereIn('unit_id', $unitIds);
+            })
             ->orderBy($req->get('sort', 'full_name'), $req->get('dir', 'asc'));
 
+
         return $query->paginate($req->get('per_page', 10));
+    }
+    private function getAllUnitIds($unitId)
+    {
+        $ids = [$unitId];
+        $children = Units::where('parent_id', $unitId)->pluck('id');
+
+        foreach ($children as $childId) {
+            $ids = array_merge($ids, $this->getAllUnitIds($childId));
+        }
+
+        return $ids;
     }
 
     public function create(array $data)
