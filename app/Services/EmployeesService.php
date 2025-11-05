@@ -48,6 +48,10 @@ class EmployeesService
 
             $data['photo_path'] = url('storage/' . $path);
         }
+        if (isset($data['gender'])) {
+            $data['gender'] = filter_var($data['gender'], FILTER_VALIDATE_BOOLEAN);
+        }
+
 
         unset($data['photo']);
         return Employees::create($data);
@@ -64,6 +68,10 @@ class EmployeesService
 
             $data['photo_path'] = url('storage/' . $path);
         }
+        if (isset($data['gender'])) {
+            $data['gender'] = filter_var($data['gender'], FILTER_VALIDATE_BOOLEAN);
+        }
+
 
         unset($data['photo']);
         $employee->update($data);

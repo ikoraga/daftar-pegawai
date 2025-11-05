@@ -21,7 +21,7 @@ class StoreEmployeeRequest extends FormRequest
             'address' => 'nullable|string|max:255',
             'phone' => 'nullable|regex:/^[0-9+\-\s()]+$/|max:20',
             'npwp' => 'nullable|string|max:25',
-            'gender' => 'required|in:L,P,true,false,1,0',
+            'gender' => 'required|in:true,false,1,0',
             'duty_place' => 'nullable|string|max:50',
             'religion_id' => 'required|string|size:26|exists:religions,id',
             'rank_id' => 'required|string|size:26|exists:ranks,id',
