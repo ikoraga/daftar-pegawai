@@ -14,7 +14,6 @@ class UpdateEmployeeRequest extends FormRequest
 
     public function rules(): array
     {
-        // Ambil ID dari route (mendukung {employees} atau model)
         $employee = $this->route('employees') ?? $this->route('employee');
         $employeeId = is_object($employee) ? $employee->id : $employee;
 
